@@ -1,42 +1,25 @@
-let socket;
-const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-socket = new WebSocket(`${protocol}://${window.location.host}`);
-let username;
-
-const messagesDiv = document.getElementById('messages');
-const messageForm = document.getElementById('messageForm');
-const messageInput = document.getElementById('messageInput');
-const chatSection = document.querySelector('.chat-section');
-const loginSection = document.querySelector('.login-section');
-
-socket.addEventListener('message', function (event) {
-    const data = JSON.parse(event.data);
-    if (data.type === 'welcome' || data.type === 'info') {
-        alert(data.text);
-    } else if (data.type === 'message') {
-        const message = document.createElement('div');
-        message.textContent = data.text;
-        messagesDiv.appendChild(message);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-    }
-});
-
-function registerUser() {
-    username = document.getElementById('usernameInput').value;
-    if (username.trim()) {
-        socket.send(JSON.stringify({type: 'register', username: username}));
-        loginSection.style.display = 'none';
-        chatSection.style.display = 'block';
-    }
-}
-
-messageForm.addEventListener('submit', function (event) {
+document.getElementById('messageForm').addEventListener('submit', function(event) {
     event.preventDefault();
+    const messageInput = document.getElementById('messageInput');
     if (messageInput.value.trim()) {
-        socket.send(JSON.stringify({type: 'message', username: username, text: messageInput.value}));
+        const message = { type: 'message', text: messageInput.value };
+        socket.send(JSON.stringify(message));
         messageInput.value = '';
     }
 });
+
+const socket = new WebSocket(`ws://${window.location.host}`);
+const messagesDiv = document.getElementById('messages');
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    if (data.type === 'message') {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = data.text;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+};
 
 document.getElementById('jokeButton').addEventListener('click', async () => {
     const joke = await fetchJoke();
