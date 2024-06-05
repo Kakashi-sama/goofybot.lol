@@ -2,8 +2,7 @@ document.getElementById('messageForm').addEventListener('submit', function(event
     event.preventDefault();
     const messageInput = document.getElementById('messageInput');
     if (messageInput.value.trim()) {
-        const message = { type: 'message', text: messageInput.value };
-        socket.send(JSON.stringify(message));
+        socket.send(messageInput.value);
         messageInput.value = '';
     }
 });
