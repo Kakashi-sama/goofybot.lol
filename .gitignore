@@ -1,1 +1,4 @@
 node_modules/
+chatData.db
+userData.db
+userDatabase.db
