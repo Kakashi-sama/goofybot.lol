@@ -1,4 +1,4 @@
-document.getElementById('messageForm').addEventListener('submit', function(event) {
+document.getElementById('messageForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const messageInput = document.getElementById('messageInput');
     if (messageInput.value.trim()) {
@@ -7,10 +7,10 @@ document.getElementById('messageForm').addEventListener('submit', function(event
     }
 });
 
-const socket = new WebSocket(`ws://${window.location.host}`);
+const socket = new WebSocket(`wss://${window.location.host}`);
 const messagesDiv = document.getElementById('messages');
 
-socket.onmessage = function(event) {
+socket.onmessage = function (event) {
     const data = JSON.parse(event.data);
     if (data.type === 'message') {
         const messageElement = document.createElement('div');
