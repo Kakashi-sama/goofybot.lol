@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funny Page</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
         <h1>Welcome to the Funny Page!</h1>
@@ -17,7 +15,12 @@
             <p id="joke"></p>
         </div>
 
-        <div class="chat-section">
+        <div class="login-section">
+            <input type="text" id="usernameInput" placeholder="Enter your username" autocomplete="off" required>
+            <button onclick="registerUser()">Register</button>
+        </div>
+
+        <div class="chat-section" style="display:none;">
             <h2>Chat</h2>
             <div id="messages" class="messages"></div>
             <form id="messageForm">
@@ -29,5 +32,4 @@
 
     <script src="index.js"></script>
 </body>
-
 </html>

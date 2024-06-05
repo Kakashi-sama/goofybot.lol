@@ -1,24 +1,39 @@
 let socket;
 const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
 socket = new WebSocket(`${protocol}://${window.location.host}`);
+let username;
 
 const messagesDiv = document.getElementById('messages');
 const messageForm = document.getElementById('messageForm');
 const messageInput = document.getElementById('messageInput');
+const chatSection = document.querySelector('.chat-section');
+const loginSection = document.querySelector('.login-section');
 
-// Listen for messages from the server
 socket.addEventListener('message', function (event) {
-    const message = document.createElement('div');
-    message.textContent = event.data;
-    messagesDiv.appendChild(message);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+    const data = JSON.parse(event.data);
+    if (data.type === 'welcome' || data.type === 'info') {
+        alert(data.text);
+    } else if (data.type === 'message') {
+        const message = document.createElement('div');
+        message.textContent = data.text;
+        messagesDiv.appendChild(message);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+    }
 });
 
-// Send a message to the server when the form is submitted
+function registerUser() {
+    username = document.getElementById('usernameInput').value;
+    if (username.trim()) {
+        socket.send(JSON.stringify({type: 'register', username: username}));
+        loginSection.style.display = 'none';
+        chatSection.style.display = 'block';
+    }
+}
+
 messageForm.addEventListener('submit', function (event) {
     event.preventDefault();
     if (messageInput.value.trim()) {
-        socket.send(messageInput.value);
+        socket.send(JSON.stringify({type: 'message', username: username, text: messageInput.value}));
         messageInput.value = '';
     }
 });
@@ -38,4 +53,3 @@ async function fetchJoke() {
         return "Failed to fetch a joke.";
     }
 }
-
