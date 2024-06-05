@@ -1,0 +1,2 @@
+# goofybot.lol
+Random jokes
